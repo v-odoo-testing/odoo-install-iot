@@ -74,8 +74,6 @@ sudo chown -R pi:pi /var/odoo
 sudo systemctl enable nginx
 sudo systemctl start nginx
 
-# Check the status of the service
-sudo systemctl status nginx
 
 
 # Define the service name
@@ -118,9 +116,6 @@ sudo systemctl daemon-reload
 sudo systemctl enable "${service_name}"
 sudo systemctl start "${service_name}"
 
-# Check the status of the service
-sudo systemctl status "${service_name}"
-
 
 echo "* Create LED service"
 
@@ -155,7 +150,5 @@ sudo systemctl daemon-reload
 sudo systemctl enable "${service_name}"
 sudo systemctl start "${service_name}"
 
-# Check the status of the service
-sudo systemctl status "${service_name}"
 
 
