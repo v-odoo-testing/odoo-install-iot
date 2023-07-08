@@ -70,11 +70,6 @@ echo "* setting iot box version"
 sudo sh -c "echo ${VERSION_IOTBOX} > /var/odoo/iotbox_version"
 sudo chown -R pi:pi /var/odoo
 
-# Define the service name
-service_name="odoo"
-
-# Define the service unit file path
-service_file="/etc/systemd/system/${service_name}.service"
 
 # Check if the service unit file already exists
 if [[ -e /etc/systemd/system/odoo.service ]]; then
@@ -85,7 +80,7 @@ fi
 
 MODULES=$(ls /home/pi/odoo/addons/ -m -w0 | tr -d ' ')
 
-echo -e "* Create service file"
+echo -e "* Create ODOO service file"
 cat <<EOF >temp_service
 # /etc/systemd/system/odoo.service
 [Unit]
@@ -116,10 +111,10 @@ sudo systemctl enable --now odoo
 echo "* Create LED service"
 
 # Check if the service unit file already exists
-if [[ -e /etc/systemd/system/odoo.service ]]; then
+if [[ -e /etc/systemd/system/led-status.service ]]; then
     echo "Service 'led-status' already exists."
     sudo systemctl is-active --quiet service && sudo systemctl stop led-status
-    sudo rm -v /etc/systemd/system/led-status.service
+    sudo rm -fv /etc/systemd/system/led-status.service
 fi
 
 echo -e "* Create service file"
