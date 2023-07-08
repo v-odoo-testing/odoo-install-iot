@@ -70,14 +70,8 @@ echo "* setting iot box version"
 sudo sh -c "echo ${VERSION_IOTBOX} > /var/odoo/iotbox_version"
 sudo chown -R pi:pi /var/odoo
 
-# restart nginx
-
-
-
-
-
 # Define the service name
-sudo service_name="odoo"
+service_name="odoo"
 
 # Define the service unit file path
 service_file="/etc/systemd/system/${service_name}.service"

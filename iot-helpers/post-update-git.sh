@@ -22,7 +22,6 @@ for file in /home/pi/iotpatch/*.iotpatch; do
         git apply  --ignore-space-change --ignore-whitespace ${file}
     fi 
 done
-
 sudo systemctl start led-status
 
 (sleep 5 && sudo systemctl restart odoo) &
