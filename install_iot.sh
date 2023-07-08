@@ -77,15 +77,16 @@ service_name="odoo"
 service_file="/etc/systemd/system/${service_name}.service"
 
 # Check if the service unit file already exists
-if [[ -e "${service_file}" ]]; then
+if [[ -e /etc/systemd/system/odoo.service ]]; then
     echo "Service '${service_name}' already exists."
-    exit 1
+    sudo systemctl stop odoo
+    sudo rm -v /etc/systemd/system/odoo.service
 fi
 
 MODULES=$(ls /home/pi/odoo/addons/ -m -w0 | tr -d ' ')
 
 echo -e "* Create service file"
-sudo cat <<EOF >"${service_file}"
+cat <<EOF >temp_service
 # /etc/systemd/system/odoo.service
 [Unit]
 Description=Odoo-iot
@@ -105,28 +106,24 @@ StandardOutput=journal+console
 WantedBy=multi-user.target
 EOF
 
+sudo mv temp_service /etc/systemd/system/odoo.service
 # Reload systemd daemon to recognize the new service
 sudo systemctl daemon-reload
 
 # Enable and start the service
-sudo systemctl enable "${service_name}"
-sudo systemctl start "${service_name}"
-
+sudo systemctl enable --now odoo
 
 echo "* Create LED service"
 
-service_name=led-status
-# Define the service unit file path
-service_file="/etc/systemd/system/${service_name}.service"
-
 # Check if the service unit file already exists
-if [[ -e "${service_file}" ]]; then
-    echo "Service '${service_name}' already exists."
-    exit 1
+if [[ -e /etc/systemd/system/odoo.service ]]; then
+    echo "Service 'led-status' already exists."
+    sudo systemctl stop led-status
+    sudo rm -v /etc/systemd/system/led-status.service
 fi
 
 echo -e "* Create service file"
-sudo cat <<EOF >"${service_file}"
+sudo cat <<EOF >temp_service
 [Unit]
 Description=Led Status
 After=sysinit.target local-fs.target
@@ -139,12 +136,14 @@ ExecStart=/home/pi/iot-helpers/led_status.sh
 WantedBy=basic.target
 EOF
 
+sudo mv temp_service /etc/systemd/system/led-status.service
+
 # Reload systemd daemon to recognize the new service
 sudo systemctl daemon-reload
 
 # Enable and start the service
-sudo systemctl enable "${service_name}"
-sudo systemctl start "${service_name}"
+sudo systemctl enable led-status
+sudo systemctl start led-status
 
 
 echo reload nginx
