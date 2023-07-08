@@ -73,7 +73,7 @@ sudo chown -R pi:pi /var/odoo
 
 # Check if the service unit file already exists
 if [[ -e /etc/systemd/system/odoo.service ]]; then
-    echo "Service '${service_name}' already exists."
+    echo "Service 'odoo' already exists."
     sudo systemctl is-active --quiet service && sudo systemctl stop odoo
     sudo rm -v /etc/systemd/system/odoo.service
 fi
@@ -94,7 +94,7 @@ PermissionsStartOnly=true
 User=pi
 Group=pi
 Environment="PATH=/home/pi/.local/bin:/usr/share/Modules/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"
-ExecStart=/usr/bin/python3 /home/pi/odoo-bin --load $MODULES -c /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf --max-cron-threads=0
+ExecStart=/usr/bin/python3 /home/pi/odoo/odoo-bin --load $MODULES -c /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf --max-cron-threads=0
 StandardOutput=journal+console
 
 [Install]
