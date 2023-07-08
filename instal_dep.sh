@@ -19,7 +19,7 @@ echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
 
 source ~/.bashrc
 
-apt-get update && apt-get -y upgrade
+sudo apt-get update && sudo apt-get -y upgrade
 # Do not be too fast to upgrade to more recent firmware and kernel than 4.38
 # Firmware 4.44 seems to prevent the LED mechanism from working
 
@@ -44,7 +44,7 @@ PKGS_TO_INSTALL="
     nginx-full \
     openbox \
     printer-driver-all \
-    python-cups \
+    python3-cups \
     python3 \
     python3-babel \
     python3-dateutil \
