@@ -26,7 +26,7 @@ if [ ! -d $CLONE_DIR ]; then
     git config core.sparsecheckout true
     echo "addons/web
 addons/hw_*
-addons/point_of_sale/tools/posbox/configuration
+addons/point_of_sale/tools/posbox/
 odoo/
 odoo-bin" | tee --append .git/info/sparse-checkout > /dev/null
     git read-tree -mu HEAD
