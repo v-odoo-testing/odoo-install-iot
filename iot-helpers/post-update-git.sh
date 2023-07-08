@@ -16,12 +16,11 @@ git clean -dfx
 
 # helpers.py
 # this script, lets try first
-sudo find /home/pi/iotpatch/ -type f -name "*.iotpatch" 2> /dev/null | while read iotpatch; do
-    DIR=$(dirname "${iotpatch}")
-    BASE=$(basename "${iotpatch%.iotpatch}")
-    sudo find "${DIR}" -type f -name "${BASE}" ! -name "*.iotpatch" | while read file; do
-        sudo patch -f "${file}" < "${iotpatch}"
-    done
+for file in /home/pi/iotpatch/*.iotpatch; do 
+    if [ -f "$file" ]; then 
+        echo "patch $file" 
+        git apply  --ignore-space-change --ignore-whitespace ${file}
+    fi 
 done
 
 sudo systemctl start led-status
