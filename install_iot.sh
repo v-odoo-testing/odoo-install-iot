@@ -62,6 +62,10 @@ sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_ini
 sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/cups" /etc/
 sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/network" /etc/
 cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo/addons/point_of_sale/__manifest__.py" /home/pi/odoo/addons/point_of_sale/__manifest__.py
+sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_before_init/etc/udev/rules.d/*" /etc/udev/rules.d/
+sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_before_init/etc/locale.gen" /etc/
+sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/lightdm" /etc/
+sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/X11" /etc/
 sudo cp -frv  ${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/var/www/iot.jpg /var/www/iot.jpg
 
 sudo cp -frv addons/point_of_sale/tools/posbox/overwrite_after_init/etc/cron.daily/odoo /etc/cron.daily/odoo
@@ -118,7 +122,7 @@ if [[ -e /etc/systemd/system/led-status.service ]]; then
 fi
 
 echo -e "* Create service file"
-sudo cat <<EOF >temp_service
+cat <<EOF >temp_service
 [Unit]
 Description=Led Status
 After=sysinit.target local-fs.target
@@ -143,3 +147,5 @@ sudo systemctl start led-status
 
 echo reload nginx
 sudo nginx -s reload
+
+locale-gen

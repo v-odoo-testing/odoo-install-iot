@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set_brightness() {
-    echo "${1}" > /sys/class/leds/led1/brightness
+    echo "${1}" > /sys/class/leds/usr_led/brightness
 }
 
 check_status_loop() {
@@ -15,5 +15,5 @@ check_status_loop() {
     done
 }
 
-echo none > /sys/class/leds/led1/trigger
+echo none > /sys/class/leds/usr_led/trigger
 check_status_loop
