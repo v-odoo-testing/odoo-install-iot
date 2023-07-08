@@ -67,8 +67,8 @@ sudo cp -frv  ${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_ini
 sudo cp -frv addons/point_of_sale/tools/posbox/overwrite_after_init/etc/cron.daily/odoo /etc/cron.daily/odoo
 
 echo "* setting iot box version"
-echo "$VERSION_IOTBOX" > /var/odoo/iotbox_version
-
+sudo sh -c "echo ${VERSION_IOTBOX} > /var/odoo/iotbox_version"
+sudo chown -R pi:pi /var/odoo
 
 # Enable and start the service
 sudo systemctl enable nginx
