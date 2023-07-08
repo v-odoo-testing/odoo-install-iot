@@ -5,10 +5,10 @@ set -o pipefail
 
 sudo apt update && sudo apt upgrade
 wget https://www.python.org/ftp/python/3.7.13/Python-3.7.13.tar.xz
-tar -xf Python-3.7.{version}.tar.xz
-sudo mv Python3.7.{version} /opt/
+tar -xf Python-3.7.13.tar.xz
+sudo mv Python3.7.13 /opt/Python3.7
 sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev -y
-cd /opt/Python3.7.{version}/
+cd /opt/Python3.7/
 ./configure --enable-optimizations --enable-shared
 make -j
 sudo make install
