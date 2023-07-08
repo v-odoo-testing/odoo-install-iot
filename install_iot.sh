@@ -70,9 +70,9 @@ echo "* setting iot box version"
 sudo sh -c "echo ${VERSION_IOTBOX} > /var/odoo/iotbox_version"
 sudo chown -R pi:pi /var/odoo
 
-# Enable and start the service
-sudo systemctl enable nginx
-sudo systemctl start nginx
+# restart nginx
+
+
 
 
 
@@ -151,4 +151,5 @@ sudo systemctl enable "${service_name}"
 sudo systemctl start "${service_name}"
 
 
-
+echo reload nginx
+sudo nginx -s reload
