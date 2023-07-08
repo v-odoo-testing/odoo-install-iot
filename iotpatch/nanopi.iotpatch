@@ -1,0 +1,104 @@
+diff --git a/addons/hw_drivers/tools/helpers.py b/addons/hw_drivers/tools/helpers.py
+index ebfe3d7d..eaef8eb3 100644
+--- a/addons/hw_drivers/tools/helpers.py
++++ b/addons/hw_drivers/tools/helpers.py
+@@ -53,16 +53,8 @@ class IoTRestart(Thread):
+ if platform.system() == 'Windows':
+     writable = contextlib.nullcontext
+ elif platform.system() == 'Linux':
+-    @contextlib.contextmanager
+-    def writable():
+-        subprocess.call(["sudo", "mount", "-o", "remount,rw", "/"])
+-        subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"])
+-        try:
+-            yield
+-        finally:
+-            subprocess.call(["sudo", "mount", "-o", "remount,ro", "/"])
+-            subprocess.call(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"])
+-            subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
++    writable = contextlib.nullcontext
++
+ 
+ def access_point():
+     return get_ip() == '10.11.12.1'
+@@ -76,7 +68,7 @@ def start_nginx_server():
+             os.popen('nginx.exe')
+             os.chdir('..\\server')
+     elif platform.system() == 'Linux':
+-        subprocess.check_call(["sudo", "service", "nginx", "restart"])
++        subprocess.check_call(["sudo", "systemctl", "restart", "nginx"])
+ 
+ def check_certificate():
+     """
+@@ -89,10 +81,8 @@ def check_certificate():
+         return {"status": CertificateStatus.ERROR,
+                 "error_code": "ERR_IOT_HTTPS_CHECK_NO_SERVER"}
+ 
+-    if platform.system() == 'Windows':
+-        path = Path(get_path_nginx()).joinpath('conf/nginx-cert.crt')
+-    elif platform.system() == 'Linux':
+-        path = Path('/etc/ssl/certs/nginx-cert.crt')
++ 
++    path = Path('/etc/ssl/certs/nginx-cert.crt')
+ 
+     if not path.exists():
+         return {"status": CertificateStatus.NEED_REFRESH}
+@@ -136,9 +126,11 @@ def check_git_branch():
+             )
+ 
+             if response.status == 200:
++                
+                 git = ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git']
+ 
+                 db_branch = json.loads(response.data)['result']['server_serie'].replace('~', '-')
++                _logger.info(f'remote version {db_branch}')
+                 if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
+                     db_branch = 'master'
+ 
+@@ -150,7 +142,7 @@ def check_git_branch():
+                         subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/interfaces/*"])
+                         subprocess.check_call(git + ['branch', '-m', db_branch])
+                         subprocess.check_call(git + ['remote', 'set-branches', 'origin', db_branch])
+-                        os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
++                        os.system('/home/pi/iot-helpers/post-update-git.sh')
+ 
+         except Exception as e:
+             _logger.error('Could not reach configured server')
+@@ -160,24 +152,9 @@ def check_image():
+     """
+     Check if the current image of IoT Box is up to date
+     """
+-    url = 'https://nightly.odoo.com/master/iotbox/SHA1SUMS.txt'
+-    urllib3.disable_warnings()
+-    http = urllib3.PoolManager(cert_reqs='CERT_NONE')
+-    response = http.request('GET', url)
+-    checkFile = {}
+-    valueActual = ''
+-    for line in response.data.decode().split('\n'):
+-        if line:
+-            value, name = line.split('  ')
+-            checkFile.update({value: name})
+-            if name == 'iotbox-latest.zip':
+-                valueLastest = value
+-            elif name == get_img_name():
+-                valueActual = value
+-    if valueActual == valueLastest:
+-        return False
+-    version = checkFile.get(valueLastest, 'Error').replace('iotboxv', '').replace('.zip', '').split('_')
+-    return {'major': version[0], 'minor': version[1]}
++    return False
++  
++    #return {'major': version[0], 'minor': version[1]}
+ 
+ def save_conf_server(url, token, db_uuid, enterprise_code):
+     """
+@@ -306,9 +283,7 @@ def load_certificate():
+     if platform.system() == 'Linux':
+         with writable():
+             Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+-            Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+             Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+-            Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+     elif platform.system() == 'Windows':
+         Path(get_path_nginx()).joinpath('conf/nginx-cert.crt').write_text(result['x509_pem'])
+         Path(get_path_nginx()).joinpath('conf/nginx-cert.key').write_text(result['private_key_pem'])
