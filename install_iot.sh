@@ -9,10 +9,10 @@ REPO=https://github.com/odoo/odoo.git
 
 CLONE_DIR="/home/pi/odoo"
 
-rm -rf iot-helpers
+rm -rf /home/pi/iot-helpers
 cp -rv iot-helpers /home/pi/
 
-rm -rf iotpatch
+rm -rf /home/pi/iotpatch
 cp -rv iotpatch /home/pi/
 
 
@@ -35,16 +35,15 @@ fi
 echo "addons/hw_drivers/iot_devices/" > /home/pi/odoo/.git/info/exclude
 echo "addons/hw_drivers/tools/helpers.py" >> /home/pi/odoo/.git/info/exclude
 
-# this script, lets try first
-echo "patch it"
-sudo find /home/pi/iotpatch/ -type f -name "*.iotpatch" 2> /dev/null | while read iotpatch; do
-    DIR=$(dirname "${iotpatch}")
-    BASE=$(basename "${iotpatch%.iotpatch}")
-    sudo find "${DIR}" -type f -name "${BASE}" ! -name "*.iotpatch" | while read file; do
-        echo "patch f: ${file} path: ${iotpatch}"
-        sudo patch -f "${file}" < "${iotpatch}"
-    done
+for file in /home/pi/iotpatch/*.iotpatch; do 
+    if [ -f "$file" ]; then 
+        echo "patch $file" 
+        git apply  --ignore-space-change --ignore-whitespace ${file}
+    fi 
 done
+
+sudo chown pi:pi -R /home/pi/odoo/
+
 
 
 # put our new helper in place => uncomment if above does not match
@@ -52,35 +51,35 @@ done
 
 # set 
 
-echo '%pi ALL=NOPASSWD: /bin/systemctl restart odoo.service' >> /etc/sudoers
-echo '%pi ALL=NOPASSWD: /bin/systemctl restart nginx' >> /etc/sudoers
-
+sudo sh -c "echo '%pi ALL=NOPASSWD: /bin/systemctl restart odoo' >> /etc/sudoers"
+sudo sh -c "echo '%pi ALL=NOPASSWD: /bin/systemctl restart nginx' >> /etc/sudoers"
+sudo sh -c "echo '%pi ALL=NOPASSWD: /bin/systemctl restart led-status' >> /etc/sudoers"
 # ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd'])
 
 # put configs in place
-cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/nginx" /etc/
-cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/ssl" /etc/
-cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/cups" /etc/
-cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/network" /etc/
+sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/nginx" /etc/
+sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/ssl" /etc/
+sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/cups" /etc/
+sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/network" /etc/
 cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo/addons/point_of_sale/manifest.py" /home/pi/odoo/addons/point_of_sale/manifest.py
-cp -frv  ${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/var/www/iot.jpg /var/www/iot.jpg
+sudo cp -frv  ${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/var/www/iot.jpg /var/www/iot.jpg
 
-cp -frv addons/point_of_sale/tools/posbox/overwrite_after_init/etc/cron.daily/odoo /etc/cron.daily/odoo
+sudo cp -frv addons/point_of_sale/tools/posbox/overwrite_after_init/etc/cron.daily/odoo /etc/cron.daily/odoo
 
 echo "* setting iot box version"
 echo "$VERSION_IOTBOX" > /var/odoo/iotbox_version
 
 
 # Enable and start the service
-systemctl enable nginx
-systemctl start nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx
 
 # Check the status of the service
-systemctl status nginx
+sudo systemctl status nginx
 
 
 # Define the service name
-service_name="odoo-iot"
+sudo service_name="odoo"
 
 # Define the service unit file path
 service_file="/etc/systemd/system/${service_name}.service"
@@ -92,7 +91,7 @@ if [[ -e "${service_file}" ]]; then
 fi
 
 echo -e "* Create service file"
-cat <<EOF >"${service_file}"
+sudo cat <<EOF >"${service_file}"
 # /etc/systemd/system/odoo.service
 [Unit]
 Description=Odoo-iot
@@ -113,19 +112,19 @@ WantedBy=multi-user.target
 EOF
 
 # Reload systemd daemon to recognize the new service
-systemctl daemon-reload
+sudo systemctl daemon-reload
 
 # Enable and start the service
-systemctl enable "${service_name}"
-systemctl start "${service_name}"
+sudo systemctl enable "${service_name}"
+sudo systemctl start "${service_name}"
 
 # Check the status of the service
-systemctl status "${service_name}"
+sudo systemctl status "${service_name}"
 
 
 echo "* Create LED service"
 
-service_name=led-status.service
+service_name=led-status
 # Define the service unit file path
 service_file="/etc/systemd/system/${service_name}.service"
 
@@ -136,7 +135,7 @@ if [[ -e "${service_file}" ]]; then
 fi
 
 echo -e "* Create service file"
-cat <<EOF >"${service_file}"
+sudo cat <<EOF >"${service_file}"
 [Unit]
 Description=Led Status
 After=sysinit.target local-fs.target
@@ -150,13 +149,13 @@ WantedBy=basic.target
 EOF
 
 # Reload systemd daemon to recognize the new service
-systemctl daemon-reload
+sudo systemctl daemon-reload
 
 # Enable and start the service
-systemctl enable "${service_name}"
-systemctl start "${service_name}"
+sudo systemctl enable "${service_name}"
+sudo systemctl start "${service_name}"
 
 # Check the status of the service
-systemctl status "${service_name}"
+sudo systemctl status "${service_name}"
 
 

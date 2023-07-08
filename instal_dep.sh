@@ -9,7 +9,7 @@ __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
 __base="$(basename ${__file} .sh)"
 
 # Recommends: antiword, graphviz, ghostscript, python-gevent, poppler-utils
-export DEBIAN_FRONTEND=noninteractive
+#export DEBIAN_FRONTEND=noninteractive
 
 # set locale to en_US
 echo "set locale to en_US"
@@ -38,7 +38,7 @@ PKGS_TO_INSTALL="
     localepurge \
     nginx-full \
     printer-driver-all \
-    python-cups \
+    python3-cups \
     python3 \
     python3-babel \
     python3-dateutil \
@@ -71,11 +71,11 @@ PKGS_TO_INSTALL="
 
 # KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
 # http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
-apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install ${PKGS_TO_INSTALL}
+sudo apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install ${PKGS_TO_INSTALL}
 
-apt-get clean
-localepurge
-rm -rfv /usr/share/doc
+sudo apt-get clean
+#localepurge
+sudo rm -rfv /usr/share/doc
 
 # python-usb in wheezy is too old
 # the latest pyusb from pip does not work either, usb.core.find() never returns
@@ -93,17 +93,18 @@ PIP_TO_INSTALL="
     pysmb==1.2.9.1 \
     cryptocode==0.1"
 
-pip3 install ${PIP_TO_INSTALL}
+sudo pip3 install ${PIP_TO_INSTALL}
 
+sudo mkdir -pv /var/log/odoo
+sudo chown pi:pi /var/log/odoo
 
-groupadd usbusers
-usermod -a -G usbusers pi
-usermod -a -G lp pi
-
-mkdir -v /var/log/odoo
-chown pi:pi /var/log/odoo
-chown pi:pi -R /home/pi/odoo/
-
-mkdir -p /var/run/odoo
+mkdir -pv /var/run/odoo
 chown pi:pi /var/run/odoo
+
+sudo usermod -a -G lp pi
+
+sudo groupadd usbusers
+sudo usermod -a -G usbusers pi
+
+
 

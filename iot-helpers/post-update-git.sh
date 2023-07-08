@@ -26,4 +26,4 @@ done
 
 sudo systemctl start led-status
 
-(sleep 5 && sudo systemctl restart odoo.service) &
+(sleep 5 && sudo systemctl restart odoo) &
