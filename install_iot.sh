@@ -79,7 +79,7 @@ service_file="/etc/systemd/system/${service_name}.service"
 # Check if the service unit file already exists
 if [[ -e /etc/systemd/system/odoo.service ]]; then
     echo "Service '${service_name}' already exists."
-    sudo systemctl stop odoo || /bin/true
+    sudo systemctl is-active --quiet service && sudo systemctl stop odoo
     sudo rm -v /etc/systemd/system/odoo.service
 fi
 
@@ -118,7 +118,7 @@ echo "* Create LED service"
 # Check if the service unit file already exists
 if [[ -e /etc/systemd/system/odoo.service ]]; then
     echo "Service 'led-status' already exists."
-    sudo systemctl stop led-status || /bin/true
+    sudo systemctl is-active --quiet service && sudo systemctl stop led-status
     sudo rm -v /etc/systemd/system/led-status.service
 fi
 
