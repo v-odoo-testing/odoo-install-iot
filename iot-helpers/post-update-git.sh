@@ -13,6 +13,7 @@ git reset "${localremote}"/"${localbranch}" --hard
 git clean -dfx
 
 #cp -fv /home/pi/odoo-install-iot/iot-helpers/helpers.py addons/hw_drivers/tools/helpers.py
+cp -frv  "addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo/addons/point_of_sale/__manifest__.py" /home/pi/odoo/addons/point_of_sale/__manifest__.py
 
 # helpers.py
 # this script, lets try first

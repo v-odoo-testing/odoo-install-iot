@@ -82,6 +82,8 @@ if [[ -e "${service_file}" ]]; then
     exit 1
 fi
 
+MODULES=$(ls /home/pi/odoo/addons/ -m -w0 | tr -d ' ')
+
 echo -e "* Create service file"
 sudo cat <<EOF >"${service_file}"
 # /etc/systemd/system/odoo.service
@@ -95,7 +97,7 @@ SyslogIdentifier=odoo_idpl
 PermissionsStartOnly=true
 User=pi
 Group=pi
-Environment="PATH=/home/pi/.local/bin:/usr/share/Modules/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin; MODULES=$(ls /home/pi/odoo/addons/ -m -w0 | tr -d ' ')"
+Environment="PATH=/home/pi/.local/bin:/usr/share/Modules/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"
 ExecStart=/usr/bin/python3 /home/pi/odoo-bin --load $MODULES -c /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf --max-cron-threads=0
 StandardOutput=journal+console
 

@@ -106,5 +106,4 @@ sudo usermod -a -G lp pi
 sudo groupadd usbusers
 sudo usermod -a -G usbusers pi
 
-
-sudo sh -c  "systemctl enable --now nginx"
+sudo  systemctl enable --now nginx
