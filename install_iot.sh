@@ -14,9 +14,8 @@ cp -rv iot-helpers /home/pi/
 
 sudo chown -R pi:pi /home/pi/iot-helpers
 
-rm -rf /home/pi/iotpatch
-cp -rv iotpatch /home/pi/
-
+# put configs in place
+sudo cp -frv install/cups/ /etc/cups/
 
 rm -rfv "${CLONE_DIR}"
 
@@ -51,9 +50,6 @@ sudo sh -c "echo '%pi ALL=NOPASSWD: /bin/systemctl restart nginx' >> /etc/sudoer
 sudo sh -c "echo '%pi ALL=NOPASSWD: /bin/systemctl restart led-status' >> /etc/sudoers"
 sudo sh -c "echo '%pi ALL=NOPASSWD: /sbin/nginx -s reload' >> /etc/sudoers"
 # ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd'])
-
-# put configs in place
-sudo cp -frv /home/pi/install/cups/ /etc/cups/
 
 sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/nginx" /etc/
 sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/ssl" /etc/
