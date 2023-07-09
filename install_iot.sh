@@ -44,8 +44,6 @@ done
 
 sudo chown pi:pi -R /home/pi/odoo/
 
-
-
 # put our new helper in place => uncomment if above does not match
 #cp -fv "../iot-helpers/helpers.py" "${CLONE_DIR}/addons/hw_drivers/tools/helpers.py"
 
@@ -54,6 +52,7 @@ sudo chown pi:pi -R /home/pi/odoo/
 sudo sh -c "echo '%pi ALL=NOPASSWD: /bin/systemctl restart odoo' >> /etc/sudoers"
 sudo sh -c "echo '%pi ALL=NOPASSWD: /bin/systemctl restart nginx' >> /etc/sudoers"
 sudo sh -c "echo '%pi ALL=NOPASSWD: /bin/systemctl restart led-status' >> /etc/sudoers"
+sudo sh -c "echo '%pi ALL=NOPASSWD: /sbin/nginx -s reload' >> /etc/sudoers"
 # ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd'])
 
 # put configs in place
@@ -62,8 +61,8 @@ sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_ini
 sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/cups" /etc/
 sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/network" /etc/
 cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo/addons/point_of_sale/__manifest__.py" /home/pi/odoo/addons/point_of_sale/__manifest__.py
-sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_before_init/etc/udev/rules.d/*" /etc/udev/rules.d/
-sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_before_init/etc/locale.gen" /etc/
+sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_before_init/etc/udev/rules.d/" /etc/udev/rules.d/
+#sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_before_init/etc/locale.gen" /etc/
 sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/lightdm" /etc/
 sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/X11" /etc/
 sudo cp -frv  ${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/var/www/iot.jpg /var/www/iot.jpg
@@ -71,6 +70,8 @@ sudo cp -frv  ${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_ini
 sudo cp -frv addons/point_of_sale/tools/posbox/overwrite_after_init/etc/cron.daily/odoo /etc/cron.daily/odoo
 
 echo "* setting iot box version"
+sudo mkdir -pv /var/odoo
+sudo chown pi:pi /var/odoo
 sudo sh -c "echo ${VERSION_IOTBOX} > /var/odoo/iotbox_version"
 sudo chown -R pi:pi /var/odoo
 
@@ -98,7 +99,7 @@ PermissionsStartOnly=true
 User=pi
 Group=pi
 Environment="PATH=/home/pi/.local/bin:/usr/share/Modules/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"
-ExecStart=/usr/bin/python3 /home/pi/odoo/odoo-bin --load $MODULES -c /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf --max-cron-threads=0
+ExecStart=/usr/local/bin/python3 /home/pi/odoo/odoo-bin --load $MODULES -c /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf --max-cron-threads=0
 StandardOutput=journal+console
 
 [Install]
@@ -141,11 +142,10 @@ sudo mv temp_service /etc/systemd/system/led-status.service
 sudo systemctl daemon-reload
 
 # Enable and start the service
-sudo systemctl enable led-status
-sudo systemctl start led-status
-
+sudo systemctl enable --now led-status
 
 echo reload nginx
 sudo nginx -s reload
 
-locale-gen
+sudo /sbin/reboot
+

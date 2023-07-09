@@ -68,7 +68,9 @@ def start_nginx_server():
             os.popen('nginx.exe')
             os.chdir('..\\server')
     elif platform.system() == 'Linux':
-        subprocess.check_call(["sudo", "systemctl", "restart", "nginx"])
+        _logger.info('Restarting Nginx server')
+        subprocess.check_call(["sudo", "/bin/systemctl", "reload","nginx"])
+        _logger.info('Restarted Nginx server')
 
 def check_certificate():
     """
@@ -138,8 +140,8 @@ def check_git_branch():
 
                 if db_branch != local_branch:
                     with writable():
-                        subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/drivers/*"])
-                        subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/interfaces/*"])
+                        #subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/drivers/*"])
+                        #subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/interfaces/*"])
                         subprocess.check_call(git + ['branch', '-m', db_branch])
                         subprocess.check_call(git + ['remote', 'set-branches', 'origin', db_branch])
                         os.system('/home/pi/iot-helpers/post-update-git.sh')

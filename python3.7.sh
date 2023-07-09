@@ -15,20 +15,25 @@ cd Python-3.7.13
 make -j8 build_all
 sudo make install
 
-python --version
+sudo /sbin/ldconfig
 
+sudo ln -sf /usr/local/bin/python3 /usr/bin/python3
 
-wget https://bootstrap.pypa.io/get-pip.py
-python3.7 get-pip.py
-python3.7 -m pip install --upgrade pip
+python3 --version
+
+sudo apt-get install libsasl2-dev libldap2-dev libssl-dev
+
+#wget https://bootstrap.pypa.io/get-pip.py
+#python3.7 get-pip.py
+#python3.7 -m pip install --upgrade pip
 
 PIP_TO_INSTALL=" pycups \
-    babel \
-    dateutil \
+    Babel \
+    python-dateutil \
     decorator \
     docutils \
     jinja2 \
-    ldap \
+    python-ldap \
     libsass \
     lxml \
     mako \
@@ -43,19 +48,25 @@ PIP_TO_INSTALL=" pycups \
     qrcode \
     reportlab \
     requests \
-    serial \
-    python3-tz \
+    pyserial \
+    pytz \
     urllib3 \
-    werkzeug"
+    cryptography==2.6.1 \
+    pyopenssl==19.0.0 \
+    werkzeug \
+    dbus-python \
+    num2words"
 
 sudo pip3 install ${PIP_TO_INSTALL}
 
+# odoo info....
 # python-usb in wheezy is too old
 # the latest pyusb from pip does not work either, usb.core.find() never returns
 # this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspios
 # so we install the latest pyusb that works with this libusb.
 # Even in stretch, we had an error with langid (but worked otherwise)
 # We fixe the version of evdev to 1.2.0 because in 1.3.0 we have a RuntimeError in 'get_event_loop()'
+
 PIP_TO_INSTALL="
     evdev==1.2.0 \
     gatt \
@@ -67,17 +78,3 @@ PIP_TO_INSTALL="
 
 sudo pip3 install ${PIP_TO_INSTALL}
 
-sudo ln -s /bin/true /bib/tvservice
-
-sudo mkdir -pv /var/log/odoo
-sudo chown pi:pi /var/log/odoo
-
-mkdir -pv /var/run/odoo
-chown pi:pi /var/run/odoo
-
-sudo usermod -a -G lp pi
-
-sudo groupadd usbusers
-sudo usermod -a -G usbusers pi
-
-sudo  systemctl enable --now nginx
