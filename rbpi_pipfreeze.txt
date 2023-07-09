@@ -1,5 +1,4 @@
-asn1crypto==0.24.0
-Babel==2.6.0
+asn1crypto==0.24.0                                                                                                                     Babel==2.6.0
 beautifulsoup4==4.7.1
 certifi==2018.8.24
 chardet==3.0.4
@@ -11,6 +10,7 @@ entrypoints==0.3
 evdev==1.2.0
 feedparser==5.2.1
 gatt==0.2.7
+gpiozero==1.6.2
 html2text==2018.1.9
 html5lib==1.0.1
 idna==2.6
@@ -42,6 +42,7 @@ pyOpenSSL==19.0.0
 pyparsing==2.2.0
 PyPDF2==1.26.0
 pyserial==3.4
+python-apt==1.8.4.3
 python-dateutil==2.7.3
 python-ldap==3.1.0
 pytz==2019.1
@@ -51,6 +52,7 @@ qrcode==6.1
 reportlab==3.5.13
 requests==2.21.0
 roman==2.0.0
+RPi.GPIO==0.7.0
 SecretStorage==2.3.1
 six==1.12.0
 soupsieve==1.8

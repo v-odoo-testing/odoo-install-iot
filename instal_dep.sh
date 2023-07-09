@@ -77,6 +77,8 @@ sudo usermod -a -G lp pi
 
 sudo groupadd usbusers
 sudo usermod -a -G usbusers pi
+sudo usermod -a -G lp pi
+sudo usermod -a -G input lightdm
 
 sudo  systemctl enable --now nginx
 

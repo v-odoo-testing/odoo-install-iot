@@ -12,6 +12,8 @@ CLONE_DIR="/home/pi/odoo"
 rm -rf /home/pi/iot-helpers
 cp -rv iot-helpers /home/pi/
 
+sudo chown -R pi:pi /home/pi/iot-helpers
+
 rm -rf /home/pi/iotpatch
 cp -rv iotpatch /home/pi/
 
@@ -35,12 +37,7 @@ fi
 echo "addons/hw_drivers/iot_devices/" > /home/pi/odoo/.git/info/exclude
 echo "addons/hw_drivers/tools/helpers.py" >> /home/pi/odoo/.git/info/exclude
 
-for file in /home/pi/iotpatch/*.iotpatch; do 
-    if [ -f "$file" ]; then 
-        echo "patch $file" 
-        git apply  --ignore-space-change --ignore-whitespace ${file}
-    fi 
-done
+cp -fv /home/pi/iot-helpers/helpers.py addons/hw_drivers/tools/helpers.py
 
 sudo chown pi:pi -R /home/pi/odoo/
 
@@ -56,11 +53,12 @@ sudo sh -c "echo '%pi ALL=NOPASSWD: /sbin/nginx -s reload' >> /etc/sudoers"
 # ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd'])
 
 # put configs in place
+sudo cp -frv /home/pi/install/cups/ /etc/cups/
+
 sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/nginx" /etc/
 sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/ssl" /etc/
-sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/cups" /etc/
+
 sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/network" /etc/
-cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo/addons/point_of_sale/__manifest__.py" /home/pi/odoo/addons/point_of_sale/__manifest__.py
 sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_before_init/etc/udev/rules.d/" /etc/udev/rules.d/
 #sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_before_init/etc/locale.gen" /etc/
 sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/lightdm" /etc/
@@ -68,6 +66,9 @@ sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_in
 sudo cp -frv  ${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/var/www/iot.jpg /var/www/iot.jpg
 
 sudo cp -frv addons/point_of_sale/tools/posbox/overwrite_after_init/etc/cron.daily/odoo /etc/cron.daily/odoo
+
+# don't want this module to load, need it for some stuff!
+cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo/addons/point_of_sale/__manifest__.py" /home/pi/odoo/addons/point_of_sale/__manifest__.py
 
 echo "* setting iot box version"
 sudo mkdir -pv /var/odoo
@@ -99,7 +100,7 @@ PermissionsStartOnly=true
 User=pi
 Group=pi
 Environment="PATH=/home/pi/.local/bin:/usr/share/Modules/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"
-ExecStart=/usr/local/bin/python3 /home/pi/odoo/odoo-bin --load $MODULES -c /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf --max-cron-threads=0
+ExecStart=/usr/local/bin/python3 /home/pi/odoo/odoo-bin --load hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web -c /home/pi/iot-helpers/odoo.conf --max-cron-threads=0
 StandardOutput=journal+console
 
 [Install]

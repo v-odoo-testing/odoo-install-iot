@@ -12,19 +12,11 @@ git reset "${localremote}"/"${localbranch}" --hard
 
 git clean -dfx
 
-#cp -fv /home/pi/odoo-install-iot/iot-helpers/helpers.py addons/hw_drivers/tools/helpers.py
+cp -fv /home/pi/iot-helpers/helpers.py addons/hw_drivers/tools/helpers.py
 cp -frv  "addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo/addons/point_of_sale/__manifest__.py" /home/pi/odoo/addons/point_of_sale/__manifest__.py
 
 sudo chown pi:pi -R /home/pi/odoo/
 
-# helpers.py
-# this script, lets try first
-for file in /home/pi/iotpatch/*.iotpatch; do 
-    if [ -f "$file" ]; then 
-        echo "patch $file" 
-        git apply  --ignore-space-change --ignore-whitespace ${file}
-    fi 
-done
 sudo systemctl start led-status
 
 (sleep 5 && sudo systemctl restart odoo) &
