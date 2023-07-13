@@ -33,7 +33,7 @@ odoo-bin" | tee --append .git/info/sparse-checkout > /dev/null
     git read-tree -mu HEAD
 fi
 
-echo "addons/hw_drivers/iot_devices/" > /home/pi/odoo/.git/info/exclude
+#echo "addons/hw_drivers/iot_devices/" > /home/pi/odoo/.git/info/exclude
 echo "addons/hw_drivers/tools/helpers.py" >> /home/pi/odoo/.git/info/exclude
 
 cp -fv /home/pi/iot-helpers/helpers.py addons/hw_drivers/tools/helpers.py
@@ -96,7 +96,7 @@ PermissionsStartOnly=true
 User=pi
 Group=pi
 Environment="PATH=/home/pi/.local/bin:/usr/share/Modules/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"
-ExecStart=/usr/local/bin/python3 /home/pi/odoo/odoo-bin --load hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web -c /home/pi/iot-helpers/odoo.conf --max-cron-threads=0
+ExecStart=/home/pi/.venv37/bin/python3 /home/pi/odoo/odoo-bin --load hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web -c /home/pi/iot-helpers/odoo.conf --max-cron-threads=0
 StandardOutput=journal+console
 
 [Install]
@@ -115,7 +115,7 @@ echo "* Create LED service"
 # Check if the service unit file already exists
 if [[ -e /etc/systemd/system/led-status.service ]]; then
     echo "Service 'led-status' already exists."
-    sudo systemctl is-active --quiet service && sudo systemctl stop led-status
+    sudo systemctl is-active --quiet led-status && sudo systemctl stop led-status
     sudo rm -fv /etc/systemd/system/led-status.service
 fi
 

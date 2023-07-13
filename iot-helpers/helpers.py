@@ -140,8 +140,8 @@ def check_git_branch():
 
                 if db_branch != local_branch:
                     with writable():
-                        #subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/drivers/*"])
-                        #subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/interfaces/*"])
+                        subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/drivers/*"])
+                        subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/interfaces/*"])
                         subprocess.check_call(git + ['branch', '-m', db_branch])
                         subprocess.check_call(git + ['remote', 'set-branches', 'origin', db_branch])
                         os.system('/home/pi/iot-helpers/post-update-git.sh')
@@ -300,7 +300,22 @@ def download_iot_handlers(auto=True):
     """
     Get the drivers from the configured Odoo server
     """
-    _logger.info('skip download iot')
+    server = get_odoo_server_url()
+    if server:
+        urllib3.disable_warnings()
+        pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
+        server = server + '/iot/get_handlers'
+        try:
+            resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
+            if resp.data:
+                with writable():
+                    drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
+                    path = path_file(str(Path().joinpath(*drivers_path)))
+                    zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
+                    zip_file.extractall(path)
+        except Exception as e:
+            _logger.error('Could not reach configured server')
+            _logger.error('A error encountered : %s ' % e)
 
 def load_iot_handlers():
     """

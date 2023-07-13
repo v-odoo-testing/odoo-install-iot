@@ -12,8 +12,9 @@ git reset "${localremote}"/"${localbranch}" --hard
 
 git clean -dfx
 
-cp -fv /home/pi/iot-helpers/helpers.py addons/hw_drivers/tools/helpers.py
-cp -frv  "addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo/addons/point_of_sale/__manifest__.py" /home/pi/odoo/addons/point_of_sale/__manifest__.py
+# todo should not be overwriten, test
+#cp -fv /home/pi/iot-helpers/helpers.py addons/hw_drivers/tools/helpers.py
+echo -e "# -*- coding: utf-8 -*-\n{}\n\n" > /home/pi/odoo/addons/point_of_sale/__manifest__.py
 
 sudo chown pi:pi -R /home/pi/odoo/
 
