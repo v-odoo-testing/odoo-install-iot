@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
+sudo sh -c "echo 'pi ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers"
 
 sudo apt-get update && sudo apt-get -y upgrade
 # Do not be too fast to upgrade to more recent firmware and kernel than 4.38
 # Firmware 4.44 seems to prevent the LED mechanism from working
+
+sudo apt-get remove gnome-shell ubuntu-session
+sudo apt-get-autoremove
 
 #    firefox-esr \
 

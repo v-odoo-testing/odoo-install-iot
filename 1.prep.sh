@@ -4,12 +4,12 @@ set -o nounset
 set -o pipefail
 # set -o xtrace
 
-__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
-__base="$(basename ${__file} .sh)"
+#__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+#__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+#__base="$(basename ${__file} .sh)"
 
 # Recommends: antiword, graphviz, ghostscript, python-gevent, poppler-utils
-export DEBIAN_FRONTEND=noninteractive
+#export DEBIAN_FRONTEND=noninteractive
 
 # set locale to en_US
 echo "set locale to en_US"
