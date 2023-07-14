@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
+#!/usr/bin/env bash
+set -o errexit
+set -o nounset
+set -o pipefail
+
 sudo sh -c "echo 'pi ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers"
 
 sudo apt-get update && sudo apt-get -y upgrade
 # Do not be too fast to upgrade to more recent firmware and kernel than 4.38
 # Firmware 4.44 seems to prevent the LED mechanism from working
 
-sudo apt-get remove gnome-shell ubuntu-session
-sudo apt-get-autoremove
+# sudo apt-get remove gnome-shell ubuntu-session
+# sudo apt-get-autoremove
 
 #    firefox-esr \
 
@@ -25,7 +30,7 @@ PKGS_TO_INSTALL="
     libcups2-dev \
     libpq-dev \
     lightdm \
-    localepurge \
+
     nginx-full \
     openbox \
     printer-driver-all \
@@ -45,8 +50,10 @@ PKGS_TO_INSTALL="
 sudo apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install ${PKGS_TO_INSTALL}
 
 sudo apt-get clean
+
+#sudo apt install localepurge 
 #localepurge
-sudo rm -rfv /usr/share/doc
+#sudo rm -rfv /usr/share/doc
 
 sudo ln -s /bin/true /bin/tvservice
 
@@ -74,7 +81,7 @@ EOF
 sudo rm -fvr /etc/udev/rules.d/99-usb.rules
 sudo mv temp_rule /etc/udev/rules.d/99-usb.rules
 
-sudo apt install tuned tuned-utils tuned-utils-systemtap
+sudo apt install tuned tuned-utils tuned-utils-systemtap -y
 sudo systemctl enable --now tuned.service
 sudo tuned-adm profile powersave
 sudo /sbin/reboot

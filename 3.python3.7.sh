@@ -21,7 +21,8 @@ sudo apt install gobject-introspection libgirepository1.0-dev libcairo2 libcairo
 
 sudo apt install libdbus-glib-1-dev libdbus-1-dev libpq-dev -y
 
-sudo apt-get install libcups2-dev
+sudo apt-get install libcups2-dev -y
+
 
 sudo apt-get install libtiff5-dev \
                      libjpeg8-dev libopenjp2-7-dev zlib1g-dev \
@@ -49,15 +50,13 @@ python3.7 -m venv /home/pi/.venv37
 PIP_TO_INSTALL=" \
     cryptography==2.6.1 \
     dbus-python \
-    num2words
+    num2words \
     asn1crypto==0.24.0 \
     Babel==2.6.0 \
     beautifulsoup4==4.7.1 \
-    PyGObject==3.30.4 \
     certifi==2018.8.24 \
     chardet==3.0.4 \
     colorzero==1.1 \
-    cryptography \
     decorator==4.3.0 \
     docutils==0.14 \
     entrypoints==0.3 \
@@ -105,15 +104,16 @@ PIP_TO_INSTALL=" \
     roman==2.0.0 \
     SecretStorage==2.3.1 \
     six==1.12.0 \
-    soupsieve==1.8 \
-    spidev==3.5 \    
-    urllib3==1.24.1 \
+    soupsieve==1.8 spidev==3.5 urllib3==1.24.1
     v4l2==0.2 \
     webencodings==0.5.1 \
     Werkzeug==0.14.1 \
     pysmb==1.2.9.1 \
     cryptocode==0.1"
-
+    
 /home/pi/.venv37/bin/python3 -m pip install ${PIP_TO_INSTALL}
 
+/home/pi/.venv37/bin/python3 -m pip install  PyGObject==3.30.4 cryptography
+
 /home/pi/.venv37/bin/python3 -m pip install ssh-import-id==5.7
+
