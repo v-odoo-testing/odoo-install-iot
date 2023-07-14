@@ -59,6 +59,7 @@ sudo cp -frv "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_before_in
 #sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_before_init/etc/locale.gen" /etc/
 sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/lightdm" /etc/
 sudo cp -frv  "${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/etc/X11" /etc/
+sudo mkdir -pv /var/www
 sudo cp -frv  ${CLONE_DIR}/addons/point_of_sale/tools/posbox/overwrite_after_init/var/www/iot.jpg /var/www/iot.jpg
 
 sudo cp -frv addons/point_of_sale/tools/posbox/overwrite_after_init/etc/cron.daily/odoo /etc/cron.daily/odoo

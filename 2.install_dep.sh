@@ -4,6 +4,7 @@ sudo apt-get update && sudo apt-get -y upgrade
 # Do not be too fast to upgrade to more recent firmware and kernel than 4.38
 # Firmware 4.44 seems to prevent the LED mechanism from working
 
+#    firefox-esr \
 
 PKGS_TO_INSTALL="
     console-data \
@@ -12,7 +13,6 @@ PKGS_TO_INSTALL="
     dbus \
     dbus-x11 \
     dnsmasq \
-    firefox-esr \
     fswebcam \
     git \
     hostapd \

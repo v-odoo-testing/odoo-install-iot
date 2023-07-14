@@ -16,7 +16,7 @@ echo "set locale to en_US"
 echo "export LANGUAGE=en_US.UTF-8" >> ~/.bashrc
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
-sudo sh -c "echo -e 'en_US.UTF-8 UTF-8\n' > /ect/locale.gen"
+sudo sh -c "echo -e 'en_US.UTF-8 UTF-8\n' > /etc/locale.gen"
 sudo /sbin/locale-gen
 
 source ~/.bashrc

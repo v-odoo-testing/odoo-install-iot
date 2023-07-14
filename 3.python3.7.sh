@@ -16,10 +16,19 @@ sudo apt install python3.7-* -y
 python3.7 --version
 
 # 
-sudo apt-get install libsasl2-dev libldap2-dev libssl-dev libxml2-dev libxslt-dev
-sudo apt install gobject-introspection libgirepository1.0-dev libcairo2-dev gir1.2-gtk-4.0
+sudo apt-get install libsasl2-dev libldap2-dev libssl-dev libxml2-dev libxslt-dev -y
+sudo apt install gobject-introspection libgirepository1.0-dev libcairo2 libcairo2-dev gir1.2-gtk-4.0 -y 
 
-# PyGobject
+sudo apt install libdbus-glib-1-dev libdbus-1-dev libpq-dev -y
+
+sudo apt-get install libcups2-dev
+
+sudo apt-get install libtiff5-dev \
+                     libjpeg8-dev libopenjp2-7-dev zlib1g-dev \
+                     libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev \
+                     libharfbuzz-dev libfribidi-dev libxcb1-dev -y
+# PyGobjectsudo apt install dbus-dev
+
 # dependency for gobject-introspection need pycompile the python3-markdown
 #sudo ln -sf /bin/true /bin/py3compile
 
@@ -27,6 +36,7 @@ sudo apt install gobject-introspection libgirepository1.0-dev libcairo2-dev gir1
 # TODO: Work with virtual env
 python3.7 -m venv /home/pi/.venv37
 
+/home/pi/.venv37/bin/python3 -m pip install wheel
 
 # odoo info....
 # python-usb in wheezy is too old
@@ -47,7 +57,7 @@ PIP_TO_INSTALL=" \
     certifi==2018.8.24 \
     chardet==3.0.4 \
     colorzero==1.1 \
-    cryptography==2.6.1 \
+    cryptography \
     decorator==4.3.0 \
     docutils==0.14 \
     entrypoints==0.3 \
@@ -96,8 +106,7 @@ PIP_TO_INSTALL=" \
     SecretStorage==2.3.1 \
     six==1.12.0 \
     soupsieve==1.8 \
-    spidev==3.5 \
-    ssh-import-id==5.7 \
+    spidev==3.5 \    
     urllib3==1.24.1 \
     v4l2==0.2 \
     webencodings==0.5.1 \
@@ -106,3 +115,5 @@ PIP_TO_INSTALL=" \
     cryptocode==0.1"
 
 /home/pi/.venv37/bin/python3 -m pip install ${PIP_TO_INSTALL}
+
+/home/pi/.venv37/bin/python3 -m pip install ssh-import-id==5.7
