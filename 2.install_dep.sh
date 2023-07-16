@@ -30,7 +30,6 @@ PKGS_TO_INSTALL="
     libcups2-dev \
     libpq-dev \
     lightdm \
-
     nginx-full \
     openbox \
     printer-driver-all \
@@ -49,7 +48,8 @@ PKGS_TO_INSTALL="
 # http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
 sudo apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install ${PKGS_TO_INSTALL}
 
-sudo apt-get clean
+sudo apt-get clean -y
+
 
 #sudo apt install localepurge 
 #localepurge

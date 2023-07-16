@@ -113,7 +113,8 @@ PIP_TO_INSTALL=" \
     
 /home/pi/.venv37/bin/python3 -m pip install ${PIP_TO_INSTALL}
 
-/home/pi/.venv37/bin/python3 -m pip install  PyGObject==3.30.4 cryptography
+/home/pi/.venv37/bin/python3 -m pip install  PyGObject==3.30.4 
+/home/pi/.venv37/bin/python3 -m pip install cryptography
 
 /home/pi/.venv37/bin/python3 -m pip install ssh-import-id==5.7
 
